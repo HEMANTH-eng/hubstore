@@ -1,7 +1,7 @@
-// HubStore Global Constants & Design Tokens
+// HyperStore Global Constants & Design Tokens
 
 export const APP_CONFIG = {
-  name: "HubStore",
+  name: "HyperStore",
   description: "Next-Gen Shopping Marketplace — Electronics, Fashion, Home & Beyond.",
   tagline: "Quality Assured • Express Delivery • 100% Genuine Products",
   currency: "INR",
@@ -12,7 +12,7 @@ export const APP_CONFIG = {
   expressShippingFee: 150,
   codFee: 40,
   maxCodAmount: 25000,
-  supportEmail: "support@hubstore.com",
+  supportEmail: "support@hyperstore.tech",
   supportPhone: "+91 1800-202-6682",
 };
 

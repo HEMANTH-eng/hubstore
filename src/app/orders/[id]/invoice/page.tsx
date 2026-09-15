@@ -101,11 +101,11 @@ export default async function OrderInvoicePage({
         {/* Header Title Bar */}
         <div className="flex justify-between items-start border-b-2 border-slate-900 pb-6 mb-6">
           <div>
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-blue-600 text-white font-black text-lg flex items-center justify-center">
-                H
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 via-indigo-600 to-cyan-500 text-white font-black text-xs tracking-wider flex items-center justify-center shadow-xs">
+                HS
               </div>
-              <span className="text-xl font-black tracking-tight text-slate-900">HubStore</span>
+              <span className="text-xl font-black tracking-tight text-slate-900">HyperStore</span>
             </div>
             <p className="text-[11px] text-slate-500 mt-1">India&apos;s Next-Gen Marketplace</p>
           </div>
@@ -341,7 +341,7 @@ export default async function OrderInvoicePage({
               1. We declare that this invoice shows the actual price of the goods described and that
               all particulars are true and correct.
             </p>
-            <p>2. Subject to Bengaluru jurisdiction only. Returns accepted as per HubStore 7-Day Policy.</p>
+            <p>2. Subject to Bengaluru jurisdiction only. Returns accepted as per HyperStore 7-Day Policy.</p>
             <p className="text-slate-400 mt-2">
               This is a computer-generated tax invoice and does not require a physical signature.
             </p>

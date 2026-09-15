@@ -55,11 +55,11 @@ export default function LoginPage() {
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
       <div className="bg-white rounded-3xl border border-slate-200 p-8 shadow-xl max-w-md w-full space-y-6">
         <div className="text-center space-y-1">
-          <div className="w-12 h-12 rounded-2xl bg-blue-600 text-white font-black text-2xl flex items-center justify-center mx-auto shadow-md">
-            N
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-cyan-500 text-white font-black text-lg tracking-wider flex items-center justify-center mx-auto shadow-md border border-blue-400/30">
+            HS
           </div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">
-            Sign In to HubStore
+            Sign In to HyperStore
           </h1>
           <p className="text-xs text-slate-500">
             Access your orders, saved addresses, and wishlist

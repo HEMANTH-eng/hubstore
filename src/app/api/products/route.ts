@@ -25,11 +25,11 @@ export async function GET(request: Request) {
     // Keyword search
     if (q) {
       where.OR = [
-        { name: { contains: q } },
-        { description: { contains: q } },
-        { sku: { contains: q } },
-        { brand: { name: { contains: q } } },
-        { category: { name: { contains: q } } },
+        { name: { contains: q, mode: "insensitive" } },
+        { description: { contains: q, mode: "insensitive" } },
+        { sku: { contains: q, mode: "insensitive" } },
+        { brand: { name: { contains: q, mode: "insensitive" } } },
+        { category: { name: { contains: q, mode: "insensitive" } } },
       ];
     }
 

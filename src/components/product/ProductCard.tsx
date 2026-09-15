@@ -110,7 +110,7 @@ export function ProductCard({ product, customBadge }: ProductCardProps) {
         rating: product.rating,
         reviewCount: product.reviewCount,
         category: product.category?.name || "General",
-        brand: product.brand?.name || "HubStore",
+        brand: product.brand?.name || "HyperStore",
         inStock: !isOutOfStock,
         stockCount: stock,
       });
@@ -207,7 +207,7 @@ export function ProductCard({ product, customBadge }: ProductCardProps) {
           {/* Brand & Category */}
           <div className="flex items-center justify-between text-[11px] text-slate-500 font-medium mb-1">
             <span className="uppercase tracking-wider text-blue-600 font-semibold truncate max-w-[120px]">
-              {product.brand?.name || product.category?.name || "HubStore"}
+              {product.brand?.name || product.category?.name || "HyperStore"}
             </span>
             {stock <= 5 && stock > 0 && (
               <span className="text-amber-600 font-bold">Only {stock} left!</span>

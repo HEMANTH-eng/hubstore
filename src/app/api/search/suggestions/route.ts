@@ -25,17 +25,17 @@ export async function GET(request: Request) {
 
     // 1. Search products (by name, description, SKU, brand)
     const productConditions: any[] = [
-      { name: { contains: rawQuery } },
-      { sku: { contains: rawQuery } },
-      { brand: { name: { contains: rawQuery } } },
-      { category: { name: { contains: rawQuery } } },
+      { name: { contains: rawQuery, mode: "insensitive" } },
+      { sku: { contains: rawQuery, mode: "insensitive" } },
+      { brand: { name: { contains: rawQuery, mode: "insensitive" } } },
+      { category: { name: { contains: rawQuery, mode: "insensitive" } } },
     ];
 
     // If typo was corrected, also search with the corrected query
     if (typoCheck.isTypo && typoCheck.corrected) {
       productConditions.push(
-        { name: { contains: typoCheck.corrected } },
-        { description: { contains: typoCheck.corrected } }
+        { name: { contains: typoCheck.corrected, mode: "insensitive" } },
+        { description: { contains: typoCheck.corrected, mode: "insensitive" } }
       );
     }
 
@@ -68,7 +68,7 @@ export async function GET(request: Request) {
       prisma.brand.findFirst({
         where: {
           OR: [
-            { name: { contains: rawQuery } },
+            { name: { contains: rawQuery, mode: "insensitive" } },
             { slug: { contains: rawQuery.toLowerCase() } },
           ],
         },
@@ -79,7 +79,7 @@ export async function GET(request: Request) {
       prisma.category.findFirst({
         where: {
           OR: [
-            { name: { contains: rawQuery } },
+            { name: { contains: rawQuery, mode: "insensitive" } },
             { slug: { contains: rawQuery.toLowerCase() } },
           ],
         },

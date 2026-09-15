@@ -5,7 +5,7 @@ test.describe('Storefront & Catalog Discovery', () => {
     await page.goto('/');
     
     // Check brand / page title
-    await expect(page).toHaveTitle(/HubStore/i);
+    await expect(page).toHaveTitle(/HyperStore/i);
     
     // Check navigation header desktop search
     const searchInput = page.locator('header input[placeholder*="Search"]').first();

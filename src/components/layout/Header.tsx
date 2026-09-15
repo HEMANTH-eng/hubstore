@@ -180,13 +180,13 @@ export function Header() {
         <div className="flex items-center justify-between h-16 gap-4">
           {/* Logo & Delivery Location */}
           <div className="flex items-center gap-6">
-            <Link href="/" className="flex items-center gap-2 group">
-              <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white font-black text-xl shadow-md group-hover:bg-blue-500 transition-colors">
-                H
+            <Link href="/" className="flex items-center gap-2.5 group">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 via-indigo-600 to-cyan-500 flex items-center justify-center text-white font-black text-sm tracking-wider shadow-md group-hover:from-blue-500 group-hover:to-cyan-400 transition-all border border-blue-400/30">
+                HS
               </div>
               <div className="flex flex-col">
                 <span className="text-xl font-bold tracking-tight text-white flex items-center">
-                  Hub<span className="text-blue-400">Store</span>
+                  Hyper<span className="text-blue-400">Store</span>
                 </span>
                 <span className="text-[10px] text-slate-400 -mt-1 tracking-wider uppercase font-semibold">
                   Marketplace
@@ -422,7 +422,7 @@ export function Header() {
                     <>
                       {/* Unauthenticated / Guest View */}
                       <div className="px-4 py-3 border-b border-slate-100 bg-slate-50/70 -mt-2.5 rounded-t-2xl mb-2">
-                        <p className="font-black text-slate-900 text-sm">Welcome to HubStore</p>
+                        <p className="font-black text-slate-900 text-sm">Welcome to HyperStore</p>
                         <p className="text-xs text-slate-500 mt-0.5">
                           Sign in to access your orders, profile, and seller studio
                         </p>

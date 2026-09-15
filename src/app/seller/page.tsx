@@ -153,7 +153,7 @@ export default function SellerPortalPage() {
         <div className="flex items-center justify-between border-b pb-3">
           <div>
             <h2 className="text-base font-bold text-slate-900">Assigned Merchant Inventory</h2>
-            <p className="text-xs text-slate-500">Real-time sync with HubStore fulfillment centers</p>
+            <p className="text-xs text-slate-500">Real-time sync with HyperStore fulfillment centers</p>
           </div>
           <Link href="/products" className="text-xs text-blue-600 font-bold hover:underline">
             View Live Storefront Listings →
@@ -164,7 +164,7 @@ export default function SellerPortalPage() {
           <div className="flex items-center gap-3">
             <Truck className="w-5 h-5 text-blue-600 shrink-0" />
             <span>
-              <strong>HubStore Express Fulfillment</strong> is enabled for all your inventory items.
+              <strong>HyperStore Express Fulfillment</strong> is enabled for all your inventory items.
               Packages are picked up directly from your warehouse within 12 hours of order placement.
             </span>
           </div>

@@ -477,7 +477,7 @@ model Payment {
 model Shipment {
   id                String         @id @default(cuid())
   orderId           String         @unique
-  carrier           String         @default("HubStore Express")
+  carrier           String         @default("HyperStore Express")
   trackingNumber    String?
   status            ShipmentStatus @default(LABEL_CREATED)
   estimatedDelivery DateTime?
@@ -603,8 +603,8 @@ model SearchHistory {
 
 model StoreSettings {
   id                  String   @id @default("default")
-  storeName           String   @default("HubStore")
-  storeEmail          String   @default("support@hubstore.com")
+  storeName           String   @default("HyperStore")
+  storeEmail          String   @default("support@hyperstore.tech")
   currency            String   @default("INR")
   currencySymbol      String   @default("₹")
   taxRate             Float    @default(18.0)

@@ -333,7 +333,7 @@ export default function ComparePage() {
                               rating: product.rating,
                               reviewCount: product.reviewCount,
                               category: product.category?.name || "General",
-                              brand: product.brand?.name || "HubStore",
+                              brand: product.brand?.name || "HyperStore",
                               inStock: true,
                               stockCount: product.inventory?.quantity || 15,
                               deliveryTime: "5-8 business days",
@@ -417,7 +417,7 @@ export default function ComparePage() {
                               {/* Title & Brand */}
                               <div>
                                 <span className="text-[11px] font-bold text-blue-600 uppercase tracking-wider">
-                                  {product.brand || "HubStore"}
+                                  {product.brand || "HyperStore"}
                                 </span>
                                 <h3 className="text-xs sm:text-sm font-black text-slate-900 line-clamp-2 mt-0.5 leading-snug">
                                   <Link
@@ -515,7 +515,7 @@ export default function ComparePage() {
                           </td>
                           {items.map((p) => (
                             <td key={p.id} className="p-4 border-r border-slate-200 font-extrabold text-slate-900">
-                              {p.brand || "HubStore"}
+                              {p.brand || "HyperStore"}
                             </td>
                           ))}
                           {items.length < 4 && <td className="bg-slate-50/50"></td>}

@@ -23,7 +23,7 @@ const STEPS = [
 export function OrderTrackerTimeline({
   status,
   orderDate,
-  carrier = "HubStore Express",
+  carrier = "HyperStore Express",
   trackingNumber,
   estimatedDelivery,
 }: OrderTrackerProps) {

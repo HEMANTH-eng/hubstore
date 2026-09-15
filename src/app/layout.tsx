@@ -16,8 +16,8 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | HubStore Marketplace",
-    default: "HubStore — India's Next-Gen Premium E-Commerce Marketplace",
+    template: "%s | HyperStore Marketplace",
+    default: "HyperStore — India's Next-Gen Premium E-Commerce Marketplace",
   },
   description:
     "Shop verified electronics, audio, designer apparel, culinary kitchenware, and wellness technology with 100% genuine guarantee and express delivery.",
@@ -30,9 +30,9 @@ export const metadata: Metadata = {
     "express delivery",
     "audio headphones",
   ],
-  authors: [{ name: "HubStore Technologies" }],
+  authors: [{ name: "HyperStore Technologies" }],
   openGraph: {
-    title: "HubStore — Next-Gen E-Commerce Marketplace",
+    title: "HyperStore — Next-Gen E-Commerce Marketplace",
     description: "Shop premium electronics, fashion, and home essentials with verified quality.",
     type: "website",
     locale: "en_IN",

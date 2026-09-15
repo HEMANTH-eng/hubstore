@@ -47,10 +47,10 @@ export function TrustGuarantees() {
           <div>
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 text-xs font-bold mb-1.5">
               <ShieldCheck className="w-3.5 h-3.5" />
-              <span>HubStore Trust & Authenticity Guarantee</span>
+              <span>HyperStore Trust & Authenticity Guarantee</span>
             </div>
             <h3 className="text-xl sm:text-2xl font-black tracking-tight">
-              Why 50,000+ Customers Trust HubStore
+              Why 50,000+ Customers Trust HyperStore
             </h3>
           </div>
           <p className="text-xs text-slate-300 max-w-md">

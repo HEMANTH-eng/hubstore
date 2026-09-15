@@ -15,16 +15,19 @@ export async function POST(request: Request) {
     });
 
     if (!user) {
-      const altEmail = emailToLookup.includes("@hubstore.com")
-        ? emailToLookup.replace("@hubstore.com", "@novacart.com")
-        : emailToLookup.includes("@novacart.com")
-        ? emailToLookup.replace("@novacart.com", "@hubstore.com")
-        : null;
-      if (altEmail) {
-        user = await prisma.user.findUnique({
-          where: { email: altEmail },
-          include: { seller: true },
-        });
+      const candidates = [
+        emailToLookup.replace(/@(hyperstore\.tech|hyperstore\.com|hubstore\.com|novacart\.com)$/, "@hubstore.com"),
+        emailToLookup.replace(/@(hyperstore\.tech|hyperstore\.com|hubstore\.com|novacart\.com)$/, "@hyperstore.com"),
+        emailToLookup.replace(/@(hyperstore\.tech|hyperstore\.com|hubstore\.com|novacart\.com)$/, "@novacart.com"),
+      ];
+      for (const alt of candidates) {
+        if (alt !== emailToLookup) {
+          user = await prisma.user.findUnique({
+            where: { email: alt },
+            include: { seller: true },
+          });
+          if (user) break;
+        }
       }
     }
 

@@ -541,7 +541,7 @@ export default function ReturnOrderPage() {
                   />
                   <div>
                     <div className="flex items-center gap-1">
-                      <span className="font-bold text-slate-900">HubStore Wallet</span>
+                      <span className="font-bold text-slate-900">HyperStore Wallet</span>
                       <span className="text-[9px] bg-amber-100 text-amber-900 font-bold px-1.5 rounded">+5% Bonus</span>
                     </div>
                     <span className="text-[10px] text-slate-500">Instant credit for future shopping</span>

@@ -72,16 +72,16 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Brand Col */}
           <div className="lg:col-span-2 space-y-4">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-black text-lg">
-                H
+            <Link href="/" className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 via-indigo-600 to-cyan-500 flex items-center justify-center text-white font-black text-xs tracking-wider border border-blue-400/30 shadow-sm">
+                HS
               </div>
               <span className="text-xl font-bold tracking-tight text-white">
-                Hub<span className="text-blue-400">Store</span>
+                Hyper<span className="text-blue-400">Store</span>
               </span>
             </Link>
             <p className="text-xs text-slate-400 leading-relaxed max-w-sm">
-              HubStore is a premier marketplace offering curated electronics, cutting-edge audio,
+              HyperStore is a premier marketplace offering curated electronics, cutting-edge audio,
               designer apparel, culinary kitchenware, and wellness technology.
             </p>
 
@@ -184,7 +184,7 @@ export function Footer() {
             <ul className="space-y-2 text-xs">
               <li>
                 <Link href="/seller" className="hover:text-emerald-400 text-emerald-400/90 font-medium transition-colors">
-                  Sell on HubStore
+                  Sell on HyperStore
                 </Link>
               </li>
               <li>
@@ -204,7 +204,7 @@ export function Footer() {
 
         {/* Bottom Bar: Payment icons & Copyright */}
         <div className="border-t border-slate-800/80 mt-10 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <p>© {new Date().getFullYear()} HubStore Technologies Pvt. Ltd. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} HyperStore Technologies Pvt. Ltd. All rights reserved.</p>
 
           <div className="flex items-center gap-3">
             <span className="text-[11px] text-slate-400 font-medium">100% Secure Payments:</span>

@@ -24,7 +24,7 @@ export class RazorpayProvider implements PaymentProvider {
           key: this.keyId,
           amount: Math.round(params.amount * 100), // amount in paise
           currency: "INR",
-          name: "HubStore Marketplace",
+          name: "HyperStore Marketplace",
           description: `Order #${params.orderNumber}`,
           order_id: simulatedRazorpayOrderId,
           prefill: {

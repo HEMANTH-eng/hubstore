@@ -663,7 +663,7 @@ export default function CheckoutPage() {
             <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-500 space-y-1">
               <p className="flex items-center gap-1.5 font-bold text-slate-700">
                 <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                HubStore Safe Shopping
+                HyperStore Safe Shopping
               </p>
               <p className="text-[11px]">
                 Your transactions are protected by bank-level 256-bit encryption.

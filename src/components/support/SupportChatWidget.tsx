@@ -38,7 +38,7 @@ export function SupportChatWidget() {
       id: "welcome-1",
       sender: "bot",
       text:
-        "Namaste! 🙏 Welcome to **HubStore Priority Support**.\n\n" +
+        "Namaste! 🙏 Welcome to **HyperStore Priority Support**.\n\n" +
         "I'm your 24/7 Order & Wholesale Sourcing Assistant. How can I help you today?",
       time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       suggestions: [
@@ -182,7 +182,7 @@ export function SupportChatWidget() {
         <button
           onClick={() => setIsOpen(!isOpen)}
           id="nova-support-chat-toggle"
-          aria-label="Toggle HubStore Support Assistant"
+          aria-label="Toggle HyperStore Support Assistant"
           className={`relative w-14 h-14 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 transform active:scale-95 ${
             isOpen
               ? "bg-slate-900 text-white rotate-90"
@@ -232,7 +232,7 @@ export function SupportChatWidget() {
               </div>
               <div>
                 <div className="flex items-center gap-1.5">
-                  <h3 className="text-sm font-bold text-white tracking-tight">HubStore Assistant</h3>
+                  <h3 className="text-sm font-bold text-white tracking-tight">HyperStore Assistant</h3>
                   <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                     Verified
                   </span>
@@ -314,7 +314,7 @@ export function SupportChatWidget() {
               🔄 7-Day Returns
             </button>
             <a
-              href="https://wa.me/9118002026682?text=Hello%20HubStore%20Support"
+              href="https://wa.me/9118002026682?text=Hello%20HyperStore%20Support"
               target="_blank"
               rel="noopener noreferrer"
               className="whitespace-nowrap px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-medium rounded-full border border-emerald-200 transition-colors shrink-0 shadow-2xs"
@@ -433,7 +433,7 @@ export function SupportChatWidget() {
             </form>
 
             <div className="mt-2 flex items-center justify-between text-[10px] text-slate-400 px-1">
-              <span>HubStore AI Assistant • 24/7 Verified</span>
+              <span>HyperStore AI Assistant • 24/7 Verified</span>
               <a
                 href="https://wa.me/9118002026682"
                 target="_blank"
