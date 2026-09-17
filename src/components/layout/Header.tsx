@@ -186,7 +186,7 @@ export function Header() {
               </div>
               <div className="flex flex-col">
                 <span className="text-xl font-bold tracking-tight text-white flex items-center">
-                  Hyper<span className="text-blue-400">Store</span>
+                  Hypper<span className="text-blue-400">Store</span>
                 </span>
                 <span className="text-[10px] text-slate-400 -mt-1 tracking-wider uppercase font-semibold">
                   Marketplace
@@ -422,7 +422,7 @@ export function Header() {
                     <>
                       {/* Unauthenticated / Guest View */}
                       <div className="px-4 py-3 border-b border-slate-100 bg-slate-50/70 -mt-2.5 rounded-t-2xl mb-2">
-                        <p className="font-black text-slate-900 text-sm">Welcome to HyperStore</p>
+                        <p className="font-black text-slate-900 text-sm">Welcome to HypperStore</p>
                         <p className="text-xs text-slate-500 mt-0.5">
                           Sign in to access your orders, profile, and seller studio
                         </p>

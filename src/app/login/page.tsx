@@ -59,7 +59,7 @@ export default function LoginPage() {
             HS
           </div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">
-            Sign In to HyperStore
+            Sign In to HypperStore
           </h1>
           <p className="text-xs text-slate-500">
             Access your orders, saved addresses, and wishlist

@@ -77,11 +77,11 @@ export function Footer() {
                 HS
               </div>
               <span className="text-xl font-bold tracking-tight text-white">
-                Hyper<span className="text-blue-400">Store</span>
+                Hypper<span className="text-blue-400">Store</span>
               </span>
             </Link>
             <p className="text-xs text-slate-400 leading-relaxed max-w-sm">
-              HyperStore is a premier marketplace offering curated electronics, cutting-edge audio,
+              HypperStore is a premier marketplace offering curated electronics, cutting-edge audio,
               designer apparel, culinary kitchenware, and wellness technology.
             </p>
 
@@ -184,7 +184,7 @@ export function Footer() {
             <ul className="space-y-2 text-xs">
               <li>
                 <Link href="/seller" className="hover:text-emerald-400 text-emerald-400/90 font-medium transition-colors">
-                  Sell on HyperStore
+                  Sell on HypperStore
                 </Link>
               </li>
               <li>
@@ -204,7 +204,7 @@ export function Footer() {
 
         {/* Bottom Bar: Payment icons & Copyright */}
         <div className="border-t border-slate-800/80 mt-10 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <p>© {new Date().getFullYear()} HyperStore Technologies Pvt. Ltd. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} HypperStore Technologies Pvt. Ltd. All rights reserved.</p>
 
           <div className="flex items-center gap-3">
             <span className="text-[11px] text-slate-400 font-medium">100% Secure Payments:</span>

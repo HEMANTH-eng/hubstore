@@ -106,7 +106,7 @@ export default async function ProductDetailPage({
   const sellerName =
     sellerProduct?.seller?.store?.name ||
     sellerProduct?.seller?.businessName ||
-    "HyperStore Retail Direct";
+    "HypperStore Retail Direct";
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
@@ -144,7 +144,7 @@ export default async function ProductDetailPage({
           <div>
             <div className="flex items-center justify-between">
               <span className="text-xs uppercase font-extrabold text-blue-600 tracking-wider">
-                {product.brand?.name || "HyperStore Exclusive"}
+                {product.brand?.name || "HypperStore Exclusive"}
               </span>
               <span className="text-xs font-mono text-slate-400">SKU: {product.sku}</span>
             </div>

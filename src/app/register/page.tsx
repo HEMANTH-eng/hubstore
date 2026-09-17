@@ -29,7 +29,7 @@ export default function RegisterPage() {
 
       const data = await res.json();
       if (res.ok && data.success) {
-        toast("Account created successfully! Welcome to HyperStore.", "success");
+        toast("Account created successfully! Welcome to HypperStore.", "success");
         if (role === "SELLER") {
           router.push("/seller");
         } else {

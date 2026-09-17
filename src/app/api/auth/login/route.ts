@@ -16,9 +16,10 @@ export async function POST(request: Request) {
 
     if (!user) {
       const candidates = [
-        emailToLookup.replace(/@(hyperstore\.tech|hyperstore\.com|hubstore\.com|novacart\.com)$/, "@hubstore.com"),
-        emailToLookup.replace(/@(hyperstore\.tech|hyperstore\.com|hubstore\.com|novacart\.com)$/, "@hyperstore.com"),
-        emailToLookup.replace(/@(hyperstore\.tech|hyperstore\.com|hubstore\.com|novacart\.com)$/, "@novacart.com"),
+        emailToLookup.replace(/@(hypperstore\.tech|hypperstore\.com|hyperstore\.tech|hyperstore\.com|hubstore\.com|novacart\.com)$/, "@hubstore.com"),
+        emailToLookup.replace(/@(hypperstore\.tech|hypperstore\.com|hyperstore\.tech|hyperstore\.com|hubstore\.com|novacart\.com)$/, "@hypperstore.com"),
+        emailToLookup.replace(/@(hypperstore\.tech|hypperstore\.com|hyperstore\.tech|hyperstore\.com|hubstore\.com|novacart\.com)$/, "@hyperstore.com"),
+        emailToLookup.replace(/@(hypperstore\.tech|hypperstore\.com|hyperstore\.tech|hyperstore\.com|hubstore\.com|novacart\.com)$/, "@novacart.com"),
       ];
       for (const alt of candidates) {
         if (alt !== emailToLookup) {

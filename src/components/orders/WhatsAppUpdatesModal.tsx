@@ -218,7 +218,7 @@ export function WhatsAppUpdatesModal({ order }: WhatsAppUpdatesModalProps) {
                       </div>
                       <div>
                         <div className="flex items-center gap-1">
-                          <span className="font-bold text-xs tracking-tight">HyperStore Official</span>
+                          <span className="font-bold text-xs tracking-tight">HypperStore Official</span>
                           <span className="bg-emerald-400/20 text-emerald-200 text-[9px] px-1 py-0.2 rounded font-bold">
                             Verified Business
                           </span>
@@ -251,7 +251,7 @@ export function WhatsAppUpdatesModal({ order }: WhatsAppUpdatesModalProps) {
                             👋 Hello <strong>{customerName}</strong>!
                           </p>
                           <p>
-                            🎉 Your HyperStore order <strong>#{order.orderNumber}</strong> has been
+                            🎉 Your HypperStore order <strong>#{order.orderNumber}</strong> has been
                             confirmed!
                           </p>
                           <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100 space-y-1 text-[11px]">
@@ -387,22 +387,22 @@ export function WhatsAppUpdatesModal({ order }: WhatsAppUpdatesModalProps) {
                     <div className="bg-blue-600 text-white rounded-2xl rounded-tr-xs p-3.5 shadow-sm max-w-md ml-auto text-xs leading-relaxed space-y-2">
                       {lifecycleStage === "PLACED" && (
                         <p>
-                          Order #{order.orderNumber} confirmed for ₹{order.totalAmount}. Estimated delivery in 5-8 business days. Sourced with quality guarantee. Track: hyperstore.tech/orders/{order.id} - HyperStore
+                          Order #{order.orderNumber} confirmed for ₹{order.totalAmount}. Estimated delivery in 5-8 business days. Sourced with quality guarantee. Track: hypperstore.tech/orders/{order.id} - HypperStore
                         </p>
                       )}
                       {lifecycleStage === "DISPATCHED" && (
                         <p>
-                          Your HyperStore order #{order.orderNumber} is dispatched via {carrier} (AWB: {awb}). Live tracking: hyperstore.tech/orders/{order.id}
+                          Your HypperStore order #{order.orderNumber} is dispatched via {carrier} (AWB: {awb}). Live tracking: hypperstore.tech/orders/{order.id}
                         </p>
                       )}
                       {lifecycleStage === "OUT_FOR_DELIVERY" && (
                         <p>
-                          Order #{order.orderNumber} is OUT FOR DELIVERY today with {carrier}. Give delivery OTP 4892 to courier partner upon receiving package. - HyperStore
+                          Order #{order.orderNumber} is OUT FOR DELIVERY today with {carrier}. Give delivery OTP 4892 to courier partner upon receiving package. - HypperStore
                         </p>
                       )}
                       {lifecycleStage === "DELIVERED" && (
                         <p>
-                          Delivered! Order #{order.orderNumber} has been delivered. View & download your GST tax invoice at hyperstore.tech/orders/{order.id}/invoice - HyperStore
+                          Delivered! Order #{order.orderNumber} has been delivered. View & download your GST tax invoice at hypperstore.tech/orders/{order.id}/invoice - HypperStore
                         </p>
                       )}
                       <div className="text-right text-[10px] text-blue-200">Delivered • 12:45 PM</div>
