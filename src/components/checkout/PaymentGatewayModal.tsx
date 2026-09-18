@@ -75,6 +75,17 @@ export function PaymentGatewayModal({
     return () => clearInterval(interval);
   }, [isOpen]);
 
+  // Auto-launch official Razorpay standard checkout popup if Razorpay is selected
+  useEffect(() => {
+    if (!isOpen) return;
+    if (initialProvider === "RAZORPAY") {
+      const timer = setTimeout(() => {
+        handleLaunchOfficialRazorpay();
+      }, 350);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const formatTimer = (seconds: number) => {

@@ -146,8 +146,8 @@ export default function CheckoutPage() {
 
       const data = await res.json();
       if (res.ok && data.success) {
-        clearCart();
         if (paymentMethod === "COD") {
+          clearCart();
           toast("Order placed successfully via Cash on Delivery!", "success");
           router.push(`/orders/${data.order.id}`);
         } else {
@@ -169,7 +169,7 @@ export default function CheckoutPage() {
     }
   };
 
-  if (items.length === 0) {
+  if (items.length === 0 && !paymentModalData) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-20 text-center space-y-4">
         <h2 className="text-xl font-bold text-slate-900">Your cart is empty</h2>
@@ -776,10 +776,12 @@ export default function CheckoutPage() {
           onClose={() => {
             const ordId = paymentModalData.orderId;
             setPaymentModalData(null);
+            clearCart();
             router.push(`/orders/${ordId}`);
           }}
           onPaymentSuccess={(orderId) => {
             setPaymentModalData(null);
+            clearCart();
             router.push(`/orders/${orderId}`);
           }}
         />
