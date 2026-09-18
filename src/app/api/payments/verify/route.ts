@@ -53,33 +53,33 @@ export async function POST(request: Request) {
       );
     }
 
-    // Atomic transaction to confirm order and mark payment as SUCCESS
-    const updatedOrder = await prisma.$transaction(async (tx) => {
-      if (order.payment) {
-        await tx.payment.update({
-          where: { id: order.payment.id },
-          data: {
-            status: "SUCCESS",
-            method: method || "ONLINE",
-            transactionId: verificationResult.transactionId || paymentId,
-            paymentData: JSON.stringify({
-              verifiedAt: new Date().toISOString(),
-              provider,
-              ...metadata,
-            }),
-          },
-        });
-      }
-
-      const ord = await tx.order.update({
-        where: { id: order.id },
+    // Confirm order and mark payment as SUCCESS safely
+    if (order.payment) {
+      await prisma.payment.update({
+        where: { id: order.payment.id },
         data: {
-          status: "CONFIRMED",
+          status: "SUCCESS",
+          method: method || "ONLINE",
+          transactionId: verificationResult.transactionId || paymentId,
+          paymentData: JSON.stringify({
+            verifiedAt: new Date().toISOString(),
+            provider,
+            ...metadata,
+          }),
         },
       });
+    }
 
-      // Customer notification
-      await tx.notification.create({
+    const updatedOrder = await prisma.order.update({
+      where: { id: order.id },
+      data: {
+        status: "CONFIRMED",
+      },
+    });
+
+    // Customer notification
+    try {
+      await prisma.notification.create({
         data: {
           userId: user.id,
           title: "Payment Confirmed",
@@ -88,9 +88,9 @@ export async function POST(request: Request) {
           link: `/orders/${order.id}`,
         },
       });
-
-      return ord;
-    });
+    } catch (notifErr) {
+      console.warn("Notification notice:", notifErr);
+    }
 
     return NextResponse.json({
       success: true,
