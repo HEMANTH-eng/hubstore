@@ -8,45 +8,65 @@ export async function POST(request: Request) {
     const body = await request.json();
     const validatedData = loginSchema.parse(body);
 
-    const emailToLookup = validatedData.email.toLowerCase();
+    const emailToLookup = validatedData.email.trim().toLowerCase();
+
+    // 1. Find user by exact email/identifier or alias
     let user = await prisma.user.findUnique({
       where: { email: emailToLookup },
       include: { seller: true },
     });
 
-    if (!user) {
-      const candidates = [
-        emailToLookup.replace(/@(hypperstore\.tech|hypperstore\.com|hyperstore\.tech|hyperstore\.com|hubstore\.com|novacart\.com)$/, "@hubstore.com"),
-        emailToLookup.replace(/@(hypperstore\.tech|hypperstore\.com|hyperstore\.tech|hyperstore\.com|hubstore\.com|novacart\.com)$/, "@hypperstore.com"),
-        emailToLookup.replace(/@(hypperstore\.tech|hypperstore\.com|hyperstore\.tech|hyperstore\.com|hubstore\.com|novacart\.com)$/, "@hyperstore.com"),
-        emailToLookup.replace(/@(hypperstore\.tech|hypperstore\.com|hyperstore\.tech|hyperstore\.com|hubstore\.com|novacart\.com)$/, "@novacart.com"),
-      ];
-      for (const alt of candidates) {
-        if (alt !== emailToLookup) {
-          user = await prisma.user.findUnique({
-            where: { email: alt },
-            include: { seller: true },
-          });
-          if (user) break;
-        }
-      }
+    // Special match for master owner account (hemanth@2006, hemanth, etc.)
+    if (!user && (emailToLookup === "hemanth@2006" || emailToLookup === "hemanth" || emailToLookup === "hemanth2006")) {
+      user = await prisma.user.findFirst({
+        where: { email: { in: ["hemanth@2006", "hemanth2006t@gmail.com"] } },
+        include: { seller: true },
+      });
     }
 
     if (!user || !user.passwordHash) {
       return NextResponse.json(
-        { error: "Invalid email or password" },
+        { error: "Invalid email/user ID or password" },
         { status: 401 }
       );
     }
 
+    // 2. Verify password with bcrypt
     const isValid = await verifyPassword(validatedData.password, user.passwordHash);
     if (!isValid) {
       return NextResponse.json(
-        { error: "Invalid email or password" },
+        { error: "Invalid email/user ID or password" },
         { status: 401 }
       );
     }
 
+    // 3. If master user (Hemanth) and role not yet selected, ask for role selection
+    const isMasterUser = user.email === "hemanth@2006" || user.email === "hemanth2006t@gmail.com";
+    const selectedRole = validatedData.selectedRole;
+
+    if (isMasterUser && !selectedRole) {
+      return NextResponse.json({
+        success: true,
+        requireRoleSelection: true,
+        availableRoles: ["ADMIN", "SELLER", "CUSTOMER"],
+        user: {
+          id: user.id,
+          name: user.name || "Boda Hemanth",
+          email: user.email,
+        },
+      });
+    }
+
+    // If master user provided a role, set their active role in database
+    if (isMasterUser && selectedRole) {
+      user = await prisma.user.update({
+        where: { id: user.id },
+        data: { role: selectedRole },
+        include: { seller: true },
+      });
+    }
+
+    // 4. Create session
     await createSession(user.id);
 
     return NextResponse.json({

@@ -3,7 +3,16 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Lock, Mail, ArrowRight, ShieldCheck, UserCheck } from "lucide-react";
+import {
+  Lock,
+  User,
+  ArrowRight,
+  ShieldCheck,
+  Store,
+  ShoppingBag,
+  Sparkles,
+  ChevronLeft,
+} from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
 
 export default function LoginPage() {
@@ -13,20 +22,37 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // Master account role picker state
+  const [roleSelectionRequired, setRoleSelectionRequired] = useState(false);
+  const [masterUserInfo, setMasterUserInfo] = useState<{ name: string; email: string } | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent, explicitRole?: "ADMIN" | "SELLER" | "CUSTOMER") => {
+    if (e) e.preventDefault();
     setIsLoading(true);
 
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({
+          email,
+          password,
+          selectedRole: explicitRole,
+        }),
       });
 
       const data = await res.json();
+
       if (res.ok && data.success) {
-        toast(`Welcome back, ${data.user.name || "Customer"}!`, "success");
+        // Master user needs to select role first
+        if (data.requireRoleSelection && !explicitRole) {
+          setMasterUserInfo(data.user);
+          setRoleSelectionRequired(true);
+          setIsLoading(false);
+          return;
+        }
+
+        toast(`Welcome back, ${data.user.name || "Hemanth"}!`, "success");
         if (data.user.role === "ADMIN") {
           router.push("/admin");
         } else if (data.user.role === "SELLER") {
@@ -45,10 +71,8 @@ export default function LoginPage() {
     }
   };
 
-  // Quick helper to fill demo credentials
-  const fillDemo = (demoEmail: string, demoPass: string) => {
-    setEmail(demoEmail);
-    setPassword(demoPass);
+  const handleSelectRole = (role: "ADMIN" | "SELLER" | "CUSTOMER") => {
+    handleSubmit(undefined as any, role);
   };
 
   return (
@@ -59,87 +83,158 @@ export default function LoginPage() {
             HS
           </div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">
-            Sign In to HypperStore
+            {roleSelectionRequired ? "Select Your Workspace" : "Sign In to HypperStore"}
           </h1>
           <p className="text-xs text-slate-500">
-            Access your orders, saved addresses, and wishlist
+            {roleSelectionRequired
+              ? "Choose your active role for this session"
+              : "Access your orders, saved addresses, and account"}
           </p>
         </div>
 
-        {/* Demo Credentials Quick Picker */}
-        <div className="bg-slate-50 border border-slate-200 rounded-2xl p-3 text-xs space-y-2">
-          <div className="flex items-center gap-1.5 font-bold text-slate-700">
-            <UserCheck className="w-4 h-4 text-blue-600" />
-            <span>One-Click Demo Accounts:</span>
-          </div>
-          <div className="grid grid-cols-3 gap-1.5 text-[11px]">
+        {/* ROLE SELECTION SCREEN (Shown when Hemanth logs in) */}
+        {roleSelectionRequired ? (
+          <div className="space-y-4 animate-fade-in">
+            <div className="p-3 bg-blue-50/70 border border-blue-200 rounded-2xl flex items-center gap-2.5 text-xs text-blue-950">
+              <Sparkles className="w-4 h-4 text-blue-600 shrink-0" />
+              <div>
+                <span className="font-bold">Owner Access: </span>
+                <span>{masterUserInfo?.name || "Boda Hemanth"} ({email})</span>
+              </div>
+            </div>
+
+            <div className="space-y-2.5">
+              {/* Option 1: Admin */}
+              <button
+                type="button"
+                disabled={isLoading}
+                onClick={() => handleSelectRole("ADMIN")}
+                className="w-full text-left p-4 rounded-2xl border-2 border-purple-200 hover:border-purple-600 bg-purple-50/30 hover:bg-purple-50 transition-all cursor-pointer group shadow-xs active:scale-98"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-purple-600 text-white flex items-center justify-center shadow-sm">
+                      <ShieldCheck className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="font-black text-slate-900 text-sm group-hover:text-purple-700">
+                        Admin Portal
+                      </div>
+                      <div className="text-[11px] text-slate-500">
+                        Marketplace analytics, orders, products & settings
+                      </div>
+                    </div>
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-purple-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </div>
+              </button>
+
+              {/* Option 2: Seller */}
+              <button
+                type="button"
+                disabled={isLoading}
+                onClick={() => handleSelectRole("SELLER")}
+                className="w-full text-left p-4 rounded-2xl border-2 border-emerald-200 hover:border-emerald-600 bg-emerald-50/30 hover:bg-emerald-50 transition-all cursor-pointer group shadow-xs active:scale-98"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-sm">
+                      <Store className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="font-black text-slate-900 text-sm group-hover:text-emerald-700">
+                        Seller Hub
+                      </div>
+                      <div className="text-[11px] text-slate-500">
+                        Manage inventory, batch stock & fulfillment
+                      </div>
+                    </div>
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </div>
+              </button>
+
+              {/* Option 3: Customer */}
+              <button
+                type="button"
+                disabled={isLoading}
+                onClick={() => handleSelectRole("CUSTOMER")}
+                className="w-full text-left p-4 rounded-2xl border-2 border-blue-200 hover:border-blue-600 bg-blue-50/30 hover:bg-blue-50 transition-all cursor-pointer group shadow-xs active:scale-98"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-sm">
+                      <ShoppingBag className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="font-black text-slate-900 text-sm group-hover:text-blue-700">
+                        Customer Store
+                      </div>
+                      <div className="text-[11px] text-slate-500">
+                        Browse, buy items & manage your personal cart
+                      </div>
+                    </div>
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </div>
+              </button>
+            </div>
+
             <button
               type="button"
-              onClick={() => fillDemo("customer@hubstore.com", "Customer@12345")}
-              className="px-2 py-1.5 bg-white border border-slate-300 rounded-lg hover:bg-blue-50 hover:text-blue-600 font-semibold"
+              onClick={() => setRoleSelectionRequired(false)}
+              className="text-xs text-slate-500 hover:text-slate-800 font-bold flex items-center gap-1 mx-auto pt-2"
             >
-              Customer
+              <ChevronLeft className="w-4 h-4" />
+              <span>Back to login</span>
             </button>
+          </div>
+        ) : (
+          /* STANDARD LOGIN FORM */
+          <form onSubmit={handleSubmit} className="space-y-4 text-xs">
+            <div>
+              <label className="block font-bold text-slate-700 mb-1">Email or User ID</label>
+              <div className="relative">
+                <User className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                <input
+                  type="text"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="hemanth@2006 or your email"
+                  className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-300 outline-none focus:border-blue-500 text-xs"
+                />
+              </div>
+            </div>
+
+            <div>
+              <div className="flex justify-between items-center mb-1">
+                <label className="font-bold text-slate-700">Password</label>
+                <span className="text-blue-600 hover:underline cursor-pointer">Forgot password?</span>
+              </div>
+              <div className="relative">
+                <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                <input
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-300 outline-none focus:border-blue-500 text-xs"
+                />
+              </div>
+            </div>
+
             <button
-              type="button"
-              onClick={() => fillDemo("admin@hubstore.com", "Admin@12345")}
-              className="px-2 py-1.5 bg-white border border-slate-300 rounded-lg hover:bg-purple-50 hover:text-purple-600 font-semibold"
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 active:scale-98 transition-all disabled:opacity-50 text-sm cursor-pointer"
             >
-              Admin
+              <span>{isLoading ? "Signing in..." : "Sign In"}</span>
+              <ArrowRight className="w-4 h-4" />
             </button>
-            <button
-              type="button"
-              onClick={() => fillDemo("seller@hubstore.com", "Seller@12345")}
-              className="px-2 py-1.5 bg-white border border-slate-300 rounded-lg hover:bg-emerald-50 hover:text-emerald-600 font-semibold"
-            >
-              Seller
-            </button>
-          </div>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4 text-xs">
-          <div>
-            <label className="block font-bold text-slate-700 mb-1">Email Address</label>
-            <div className="relative">
-              <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="name@example.com"
-                className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-300 outline-none focus:border-blue-500"
-              />
-            </div>
-          </div>
-
-          <div>
-            <div className="flex justify-between items-center mb-1">
-              <label className="font-bold text-slate-700">Password</label>
-              <span className="text-blue-600 hover:underline cursor-pointer">Forgot password?</span>
-            </div>
-            <div className="relative">
-              <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-300 outline-none focus:border-blue-500"
-              />
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 active:scale-98 transition-all disabled:opacity-50 text-sm cursor-pointer"
-          >
-            <span>{isLoading ? "Signing in..." : "Sign In"}</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        </form>
+          </form>
+        )}
 
         <div className="text-center text-xs text-slate-500 pt-2 border-t border-slate-100">
           Don&apos;t have an account?{" "}

@@ -63,62 +63,42 @@ async function main() {
   });
 
   // Password hashes
-  const adminPassword = await bcrypt.hash("Admin@12345", 10);
-  const sellerPassword = await bcrypt.hash("Seller@12345", 10);
-  const customerPassword = await bcrypt.hash("Customer@12345", 10);
+  const masterPassword = await bcrypt.hash("bhemanth", 10);
 
-  // Demo Users
-  const admin = await prisma.user.create({
+  // Master Owner User (Hemanth)
+  const masterUser = await prisma.user.create({
     data: {
-      name: "HubStore Admin",
-      email: "admin@hubstore.com",
-      passwordHash: adminPassword,
+      name: "Boda Hemanth",
+      email: "hemanth@2006",
+      passwordHash: masterPassword,
       role: "ADMIN",
       phone: "+91 9876543210",
       image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=faces",
     },
   });
 
-  const sellerUser = await prisma.user.create({
-    data: {
-      name: "Apex Electronics & Retail",
-      email: "seller@hubstore.com",
-      passwordHash: sellerPassword,
-      role: "SELLER",
-      phone: "+91 9876501234",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=faces",
-    },
-  });
+  const admin = masterUser;
+  const sellerUser = masterUser;
+  const customer = masterUser;
 
   const store = await prisma.store.create({
     data: {
-      name: "Apex Official Store",
-      slug: "apex-official",
-      description: "Authorized flagship seller for premium tech, gadgets, and lifestyle gear.",
-      rating: 4.8,
+      name: "HypperStore Official Store",
+      slug: "hypperstore-official",
+      description: "Official authorized flagship store for HypperStore marketplace.",
+      rating: 4.9,
     },
   });
 
   const seller = await prisma.seller.create({
     data: {
-      userId: sellerUser.id,
+      userId: masterUser.id,
       storeId: store.id,
-      businessName: "Apex Retail Solutions Pvt Ltd",
+      businessName: "HypperStore Official Solutions",
       gstNumber: "29AAAAA0000A1Z5",
       phone: "+91 9876501234",
       isVerified: true,
       status: "ACTIVE",
-    },
-  });
-
-  const customer = await prisma.user.create({
-    data: {
-      name: "Aarav Sharma",
-      email: "customer@hubstore.com",
-      passwordHash: customerPassword,
-      role: "CUSTOMER",
-      phone: "+91 9988776655",
-      image: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&h=150&fit=crop&crop=faces",
     },
   });
 
