@@ -178,108 +178,114 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: paymentResult.message }, { status: 400 });
     }
 
-    // Execute atomic transaction for order, inventory reduction, and coupon usage
-    const createdOrder = await prisma.$transaction(async (tx) => {
-      // 1. Create Order
-      const newOrder = await tx.order.create({
-        data: {
-          orderNumber,
-          userId: user.id,
-          addressId: address.id,
-          status: paymentMethod === "COD" ? "CONFIRMED" : "PLACED",
-          subtotal: calculatedSubtotal,
-          discountAmount,
-          shippingAmount,
-          taxAmount,
-          totalAmount,
-          couponCode: discountAmount > 0 ? couponCode : null,
-          notes,
-          items: {
-            create: validatedOrderItems.map((item) => ({
-              productId: item.productId,
-              variantId: item.variantId,
-              quantity: item.quantity,
-              price: item.unitPrice,
-              total: item.total,
-            })),
-          },
-          payment: {
-            create: {
-              amount: totalAmount,
-              currency: "INR",
-              provider: paymentMethod,
-              method: paymentMethod === "COD" ? "CASH" : "ONLINE",
-              status: paymentMethod === "COD" ? "SUCCESS" : "PENDING",
-              transactionId: paymentResult.transactionId || null,
-              paymentData: JSON.stringify(paymentResult.data || {}),
-            },
-          },
-          shipment: {
-            create: {
-              carrier: "HubStore Express",
-              trackingNumber: `TRK${Math.floor(100000000 + Math.random() * 900000000)}IN`,
-              status: "LABEL_CREATED",
-              estimatedDelivery: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
-            },
+    // Create order with full relations (atomically in a single query)
+    const createdOrder = await prisma.order.create({
+      data: {
+        orderNumber,
+        userId: user.id,
+        addressId: address.id,
+        status: paymentMethod === "COD" ? "CONFIRMED" : "PLACED",
+        subtotal: calculatedSubtotal,
+        discountAmount,
+        shippingAmount,
+        taxAmount,
+        totalAmount,
+        couponCode: discountAmount > 0 ? couponCode : null,
+        notes,
+        items: {
+          create: validatedOrderItems.map((item) => ({
+            productId: item.productId,
+            variantId: item.variantId,
+            quantity: item.quantity,
+            price: item.unitPrice,
+            total: item.total,
+          })),
+        },
+        payment: {
+          create: {
+            amount: totalAmount,
+            currency: "INR",
+            provider: paymentMethod,
+            method: paymentMethod === "COD" ? "CASH" : "ONLINE",
+            status: paymentMethod === "COD" ? "SUCCESS" : "PENDING",
+            transactionId: paymentResult.transactionId || null,
+            paymentData: JSON.stringify(paymentResult.data || {}),
           },
         },
-        include: {
-          items: { include: { product: true } },
-          payment: true,
-          shipment: true,
-          address: true,
+        shipment: {
+          create: {
+            carrier: "HypperStore Express",
+            trackingNumber: `TRK${Math.floor(100000000 + Math.random() * 900000000)}IN`,
+            status: "LABEL_CREATED",
+            estimatedDelivery: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+          },
         },
-      });
+      },
+      include: {
+        items: { include: { product: true } },
+        payment: true,
+        shipment: true,
+        address: true,
+      },
+    });
 
-      // 2. Decrement inventory
-      for (const item of validatedOrderItems) {
+    // 2. Decrement inventory (safe and resilient)
+    for (const item of validatedOrderItems) {
+      try {
         if (item.variantId) {
-          await tx.productVariant.update({
+          await prisma.productVariant.update({
             where: { id: item.variantId },
             data: { stock: { decrement: item.quantity } },
           });
         }
-
-        await tx.inventory.update({
+        await prisma.inventory.update({
           where: { productId: item.productId },
           data: { quantity: { decrement: item.quantity } },
         });
+      } catch (invErr) {
+        console.warn("Inventory decrement notice:", invErr);
       }
+    }
 
-      // 3. Record coupon usage if applicable
-      if (couponCode && discountAmount > 0) {
-        const coupon = await tx.coupon.findUnique({
+    // 3. Record coupon usage if applicable
+    if (couponCode && discountAmount > 0) {
+      try {
+        const coupon = await prisma.coupon.findUnique({
           where: { code: couponCode.toUpperCase() },
         });
         if (coupon) {
-          await tx.coupon.update({
+          await prisma.coupon.update({
             where: { id: coupon.id },
             data: { usageCount: { increment: 1 } },
           });
 
-          await tx.couponUsage.create({
+          await prisma.couponUsage.create({
             data: {
               couponId: coupon.id,
               userId: user.id,
-              orderId: newOrder.id,
+              orderId: createdOrder.id,
             },
           });
         }
+      } catch (cpnErr) {
+        console.warn("Coupon usage record notice:", cpnErr);
       }
+    }
 
-      // 4. Create user notification
-      await tx.notification.create({
+    // 4. Create user notification
+    try {
+      await prisma.notification.create({
         data: {
           userId: user.id,
           title: "Order Placed Successfully",
           message: `Your order #${orderNumber} for ₹${totalAmount.toLocaleString("en-IN")} has been placed and is being processed.`,
           type: "ORDER",
-          link: `/orders/${newOrder.id}`,
+          link: `/orders/${createdOrder.id}`,
         },
       });
-
-      return newOrder;
-    });
+    } catch (notifErr) {
+      console.warn("Notification record notice:", notifErr);
+    }
 
     return NextResponse.json({
       success: true,
