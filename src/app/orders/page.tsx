@@ -6,6 +6,8 @@ import { Package, ChevronRight, Truck, Clock, CheckCircle2, AlertCircle } from "
 import { formatCurrency } from "@/lib/currency";
 import { ORDER_STATUS_LABELS } from "@/lib/constants";
 
+import { CancelOrderModal } from "@/components/orders/CancelOrderModal";
+
 export default function OrdersPage() {
   const [orders, setOrders] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -120,12 +122,22 @@ export default function OrdersPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
                     <span
                       className={`px-2.5 py-1 rounded-full text-xs font-bold border ${statusConfig.color}`}
                     >
                       {statusConfig.label}
                     </span>
+
+                    {["PLACED", "CONFIRMED", "PACKED"].includes(order.status) && (
+                      <CancelOrderModal
+                        orderId={order.id}
+                        orderNumber={order.orderNumber}
+                        totalAmount={order.totalAmount}
+                        isPaidOnline={order.payment?.status === "SUCCESS"}
+                      />
+                    )}
+
                     <Link
                       href={`/orders/${order.id}`}
                       className="bg-white hover:bg-slate-100 text-slate-800 font-bold px-3 py-1.5 rounded-lg border border-slate-300 text-xs flex items-center gap-1"

@@ -15,6 +15,7 @@ import { prisma } from "@/lib/db";
 import { OrderTrackerTimeline } from "@/components/orders/OrderTrackerTimeline";
 import { WhatsAppUpdatesModal } from "@/components/orders/WhatsAppUpdatesModal";
 import { formatCurrency } from "@/lib/currency";
+import { CancelOrderModal } from "@/components/orders/CancelOrderModal";
 
 export default async function OrderDetailPage({
   params,
@@ -47,6 +48,9 @@ export default async function OrderDetailPage({
     notFound();
   }
 
+  const canCancel = ["PLACED", "CONFIRMED", "PACKED"].includes(order.status);
+  const canReturn = order.status === "DELIVERED";
+
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 space-y-6">
       {/* Top Bar */}
@@ -76,14 +80,29 @@ export default async function OrderDetailPage({
 
         <div className="flex items-center gap-2.5 flex-wrap">
           <WhatsAppUpdatesModal order={order} />
-          <Link
-            href={`/orders/${order.id}/return`}
-            id="order-return-request-btn"
-            className="flex items-center gap-1.5 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-bold text-xs px-4 py-2.5 rounded-xl shadow-xs transition-all"
-          >
-            <RotateCcw className="w-3.5 h-3.5 text-amber-700" />
-            <span>Return / Replace</span>
-          </Link>
+
+          {/* Cancel Order Option */}
+          {canCancel && (
+            <CancelOrderModal
+              orderId={order.id}
+              orderNumber={order.orderNumber}
+              totalAmount={order.totalAmount}
+              isPaidOnline={order.payment?.status === "SUCCESS"}
+            />
+          )}
+
+          {/* Return / Replace Option */}
+          {canReturn && (
+            <Link
+              href={`/orders/${order.id}/return`}
+              id="order-return-request-btn"
+              className="flex items-center gap-1.5 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-bold text-xs px-4 py-2.5 rounded-xl shadow-xs transition-all"
+            >
+              <RotateCcw className="w-3.5 h-3.5 text-amber-700" />
+              <span>Return / Replace</span>
+            </Link>
+          )}
+
           <Link
             href={`/orders/${order.id}/invoice`}
             target="_blank"
