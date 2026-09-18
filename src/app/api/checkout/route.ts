@@ -5,6 +5,7 @@ import { APP_CONFIG } from "@/lib/constants";
 import { codProvider } from "@/lib/payments/cod";
 import { razorpayProvider } from "@/lib/payments/razorpay";
 import { stripeProvider } from "@/lib/payments/stripe";
+import { sendOrderConfirmationEmail } from "@/lib/email";
 
 export async function POST(request: Request) {
   try {
@@ -286,6 +287,32 @@ export async function POST(request: Request) {
     } catch (notifErr) {
       console.warn("Notification record notice:", notifErr);
     }
+
+    // 5. Send automated confirmation email to customer
+    sendOrderConfirmationEmail({
+      orderId: createdOrder.id,
+      orderNumber: createdOrder.orderNumber,
+      customerName: address.name || user.name || "Customer",
+      customerEmail: user.email,
+      totalAmount: createdOrder.totalAmount,
+      subtotal: createdOrder.subtotal,
+      shippingAmount: createdOrder.shippingAmount,
+      taxAmount: createdOrder.taxAmount,
+      discountAmount: createdOrder.discountAmount,
+      paymentMethod,
+      items: createdOrder.items.map((item) => ({
+        name: item.product.name,
+        quantity: item.quantity,
+        price: item.price,
+        total: item.total,
+      })),
+      shippingAddress: {
+        street: address.street,
+        city: address.city,
+        state: address.state,
+        pincode: address.pincode,
+      },
+    }).catch((emailErr) => console.warn("Email dispatch notice:", emailErr));
 
     return NextResponse.json({
       success: true,
