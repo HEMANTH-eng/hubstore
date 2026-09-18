@@ -15,27 +15,56 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://www.hypperstore.tech"),
   title: {
-    template: "%s | HypperStore Marketplace",
+    template: "%s | HypperStore",
     default: "HypperStore — India's Next-Gen Premium E-Commerce Marketplace",
   },
   description:
-    "Shop verified electronics, audio, designer apparel, culinary kitchenware, and wellness technology with 100% genuine guarantee and express delivery.",
+    "Shop verified electronics, noise-cancelling audio, designer fashion, kitchenware & wellness tech with 100% genuine guarantee and free express delivery across India.",
   keywords: [
-    "ecommerce",
-    "electronics",
+    "hypperstore",
+    "hypperstore.tech",
+    "ecommerce india",
+    "electronics online",
     "smartphones",
-    "fashion",
-    "india marketplace",
+    "wireless headphones",
+    "designer fashion",
+    "home appliances",
     "express delivery",
-    "audio headphones",
   ],
   authors: [{ name: "HypperStore Technologies" }],
+  creator: "HypperStore",
+  publisher: "HypperStore",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
   openGraph: {
-    title: "HypperStore — Next-Gen E-Commerce Marketplace",
-    description: "Shop premium electronics, fashion, and home essentials with verified quality.",
-    type: "website",
+    title: "HypperStore — India's Next-Gen Premium E-Commerce Marketplace",
+    description: "Shop curated electronics, audio, apparel & lifestyle gadgets with free express shipping across India.",
+    url: "https://www.hypperstore.tech",
+    siteName: "HypperStore",
     locale: "en_IN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "HypperStore — India's Next-Gen Premium E-Commerce Marketplace",
+    description: "Shop curated electronics, audio, apparel & lifestyle gadgets with free express shipping across India.",
+    creator: "@hypperstore",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 };
 

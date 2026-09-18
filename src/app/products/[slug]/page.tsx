@@ -31,13 +31,34 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   if (!product) return { title: "Product Not Found" };
 
+  const priceText = `₹${product.price.toLocaleString("en-IN")}`;
+  const desc = `${priceText} | ${product.shortDescription || product.description.substring(0, 140)} - Buy online with Free Express Delivery on HypperStore.`;
+  const primaryImage = product.images?.[0]?.url || "/og-image.png";
+
   return {
-    title: `${product.name} | ${product.brand?.name || "HubStore"}`,
-    description: product.shortDescription || product.description.substring(0, 160),
+    title: `${product.name} | HypperStore`,
+    description: desc,
     openGraph: {
-      title: product.name,
-      description: product.shortDescription || product.description.substring(0, 160),
-      images: product.images?.[0]?.url ? [product.images[0].url] : [],
+      title: `${product.name} — ${priceText}`,
+      description: desc,
+      url: `https://www.hypperstore.tech/products/${product.slug}`,
+      siteName: "HypperStore",
+      images: [
+        {
+          url: primaryImage,
+          width: 800,
+          height: 800,
+          alt: product.name,
+        },
+      ],
+      locale: "en_IN",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${product.name} — ${priceText}`,
+      description: desc,
+      images: [primaryImage],
     },
   };
 }
