@@ -150,6 +150,8 @@ export default function CheckoutPage() {
           clearCart();
           toast("Order placed successfully via Cash on Delivery!", "success");
           router.push(`/orders/${data.order.id}`);
+        } else if (paymentMethod === "RAZORPAY") {
+          await launchOfficialRazorpay(data.order);
         } else {
           setPaymentModalData({
             isOpen: true,
@@ -161,10 +163,107 @@ export default function CheckoutPage() {
         }
       } else {
         toast(data.error || "Failed to place order", "error");
+        setIsProcessing(false);
       }
     } catch (err) {
       toast("An unexpected error occurred during checkout", "error");
-    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const launchOfficialRazorpay = async (order: any) => {
+    try {
+      // Ensure Razorpay SDK script is loaded
+      if (typeof window !== "undefined" && !(window as any).Razorpay) {
+        await new Promise<void>((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = "https://checkout.razorpay.com/v1/checkout.js";
+          script.onload = () => resolve();
+          script.onerror = () => reject(new Error("Failed to load Razorpay SDK"));
+          document.body.appendChild(script);
+        });
+      }
+
+      const createRes = await fetch("/api/payments/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId: order.id, provider: "RAZORPAY" }),
+      });
+
+      const createData = await createRes.json();
+      if (!createRes.ok || !createData.success) {
+        toast(createData.error || "Could not initialize Razorpay order", "error");
+        setIsProcessing(false);
+        return;
+      }
+
+      const pData = createData.paymentData;
+      const selectedAddr = addresses.find((a) => a.id === selectedAddressId);
+
+      const options = {
+        key: pData.key,
+        amount: pData.amount,
+        currency: pData.currency || "INR",
+        name: "HypperStore",
+        description: `Order #${order.orderNumber}`,
+        order_id: pData.order_id,
+        prefill: {
+          name: selectedAddr?.fullName || pData.prefill?.name || "",
+          email: pData.prefill?.email || "",
+          contact: selectedAddr?.phone || pData.prefill?.contact || "",
+        },
+        theme: { color: "#2563eb" },
+        handler: async function (response: any) {
+          setIsProcessing(true);
+          try {
+            const verifyRes = await fetch("/api/payments/verify", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                orderId: order.id,
+                paymentId: response.razorpay_payment_id,
+                signature: response.razorpay_signature,
+                provider: "RAZORPAY",
+                method: "ONLINE",
+                metadata: {
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature,
+                },
+              }),
+            });
+
+            const verifyData = await verifyRes.json();
+            if (verifyRes.ok && verifyData.success) {
+              clearCart();
+              toast("Payment verified successfully via Razorpay!", "success");
+              router.push(`/orders/${order.id}`);
+            } else {
+              toast(verifyData.error || "Payment verification failed", "error");
+              setIsProcessing(false);
+            }
+          } catch (vErr) {
+            toast("Error verifying payment with server", "error");
+            setIsProcessing(false);
+          }
+        },
+        modal: {
+          ondismiss: function () {
+            setIsProcessing(false);
+            toast("Payment window closed", "info");
+          },
+        },
+      };
+
+      const rzp = new (window as any).Razorpay(options);
+      rzp.on("payment.failed", function (response: any) {
+        toast(`Payment failed: ${response.error?.description || "Transaction declined"}`, "error");
+        setIsProcessing(false);
+      });
+      rzp.open();
+    } catch (err: any) {
+      console.error("Razorpay popup launch error:", err);
+      toast(err.message || "Failed to launch Razorpay", "error");
       setIsProcessing(false);
     }
   };
