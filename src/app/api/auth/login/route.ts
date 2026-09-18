@@ -16,10 +16,24 @@ export async function POST(request: Request) {
       include: { seller: true },
     });
 
-    // Special match for master owner account (hemanth@2006, hemanth, etc.)
-    if (!user && (emailToLookup === "hemanth@2006" || emailToLookup === "hemanth" || emailToLookup === "hemanth2006")) {
+    // Special match for master owner account (hemanth2006t, hemanth2006t@gmail.com, hemanth@2006, etc.)
+    const masterAliases = [
+      "hemanth2006t",
+      "hemanth2006t@gmail.com",
+      "hemanth@2006t",
+      "hemanth@2006",
+      "hemanth2006",
+      "hemanth",
+    ];
+
+    if (!user && masterAliases.includes(emailToLookup)) {
       user = await prisma.user.findFirst({
-        where: { email: { in: ["hemanth@2006", "hemanth2006t@gmail.com"] } },
+        where: {
+          OR: [
+            { email: { in: masterAliases } },
+            { email: "hemanth2006t@gmail.com" },
+          ],
+        },
         include: { seller: true },
       });
     }
@@ -41,7 +55,7 @@ export async function POST(request: Request) {
     }
 
     // 3. If master user (Hemanth) and role not yet selected, ask for role selection
-    const isMasterUser = user.email === "hemanth@2006" || user.email === "hemanth2006t@gmail.com";
+    const isMasterUser = masterAliases.includes(user.email.toLowerCase()) || masterAliases.includes(emailToLookup);
     const selectedRole = validatedData.selectedRole;
 
     if (isMasterUser && !selectedRole) {
