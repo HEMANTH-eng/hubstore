@@ -1,4 +1,4 @@
-import React from "react";
+import React, { cache } from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import {
@@ -20,14 +20,45 @@ import { ProductCard } from "@/components/product/ProductCard";
 import { ProductDetailsClient } from "./ProductDetailsClient";
 import { formatCurrency, calculateDiscountPercentage } from "@/lib/currency";
 
-export const revalidate = 60;
+export const revalidate = 300;
+
+export async function generateStaticParams() {
+  try {
+    const products = await prisma.product.findMany({
+      where: { status: "PUBLISHED" },
+      select: { slug: true },
+    });
+    return products.map((p) => ({ slug: p.slug }));
+  } catch (error) {
+    console.error("Failed to generate static params for products:", error);
+    return [];
+  }
+}
+
+const getProduct = cache(async (slug: string) => {
+  return prisma.product.findUnique({
+    where: { slug },
+    include: {
+      images: { orderBy: { order: "asc" } },
+      variants: true,
+      category: true,
+      subcategory: true,
+      brand: true,
+      inventory: true,
+      reviews: {
+        include: {
+          user: { select: { name: true, image: true } },
+          images: true,
+        },
+        orderBy: { createdAt: "desc" },
+      },
+    },
+  });
+});
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const product = await prisma.product.findUnique({
-    where: { slug },
-    include: { brand: true, category: true, images: true },
-  });
+  const product = await getProduct(slug);
 
   if (!product) return { title: "Product Not Found" };
 
@@ -69,25 +100,7 @@ export default async function ProductDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-
-  const product = await prisma.product.findUnique({
-    where: { slug },
-    include: {
-      images: { orderBy: { order: "asc" } },
-      variants: true,
-      category: true,
-      subcategory: true,
-      brand: true,
-      inventory: true,
-      reviews: {
-        include: {
-          user: { select: { name: true, image: true } },
-          images: true,
-        },
-        orderBy: { createdAt: "desc" },
-      },
-    },
-  });
+  const product = await getProduct(slug);
 
   if (!product) {
     notFound();

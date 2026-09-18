@@ -126,7 +126,7 @@ export function ProductCard({ product, customBadge }: ProductCardProps) {
   return (
     <div className="group relative bg-white rounded-2xl border border-slate-200/90 hover:border-slate-300 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden">
       {/* Product Image Area */}
-      <Link href={`/products/${product.slug}`} className="block relative aspect-square bg-slate-50 overflow-hidden">
+      <Link href={`/products/${product.slug}`} prefetch={true} className="block relative aspect-square bg-slate-50 overflow-hidden">
         <img
           src={primaryImage}
           alt={product.name}
@@ -215,7 +215,7 @@ export function ProductCard({ product, customBadge }: ProductCardProps) {
           </div>
 
           {/* Product Name */}
-          <Link href={`/products/${product.slug}`} className="block">
+          <Link href={`/products/${product.slug}`} prefetch={true} className="block">
             <h3 className="text-sm font-semibold text-slate-900 line-clamp-2 leading-snug group-hover:text-blue-600 transition-colors">
               {product.name}
             </h3>

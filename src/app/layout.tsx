@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -5,6 +6,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ToastProvider } from "@/components/ui/Toast";
 import { ClientOverlays } from "@/components/layout/ClientOverlays";
+import { TopProgressBar } from "@/components/ui/TopProgressBar";
 
 // Self-hosted Next.js Google Font with zero layout shift (CLS = 0)
 const inter = Inter({
@@ -77,6 +79,9 @@ export default function RootLayout({
     <html lang="en" className={`h-full antialiased ${inter.variable}`}>
       <body className={`${inter.className} min-h-full flex flex-col bg-slate-50 text-slate-900 selection:bg-blue-600 selection:text-white`}>
         <ToastProvider>
+          <Suspense fallback={null}>
+            <TopProgressBar />
+          </Suspense>
           <Header />
           <main className="flex-1">{children}</main>
           <ClientOverlays />
