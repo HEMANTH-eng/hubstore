@@ -15,6 +15,7 @@ import {
   CheckCircle2,
   RefreshCw,
   Plus,
+  Zap,
 } from "lucide-react";
 import { formatCurrency } from "@/lib/currency";
 import { ORDER_STATUS_LABELS } from "@/lib/constants";
@@ -115,6 +116,13 @@ export default function AdminDashboardPage() {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
+          <Link
+            href="/admin/wholesale"
+            className="text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white px-3.5 py-2.5 rounded-xl shadow-xs flex items-center gap-1.5"
+          >
+            <Zap className="w-3.5 h-3.5" />
+            <span>Wholesale & Suppliers</span>
+          </Link>
           <Link
             href="/admin/products"
             className="text-xs font-bold bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 px-3.5 py-2.5 rounded-xl shadow-xs flex items-center gap-1.5"

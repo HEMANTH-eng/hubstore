@@ -619,3 +619,100 @@ model StoreSettings {
   lowStockThreshold   Int      @default(5)
   updatedAt           DateTime @updatedAt
 }
+
+enum SupplierProvider {
+  CJ_DROPSHIPPING
+  BAAPSTORE
+  CUSTOM_FEED
+  DEMO_WHOLESALE
+}
+
+enum MarkupType {
+  PERCENTAGE
+  FIXED
+}
+
+enum DispatchStatus {
+  PENDING
+  DISPATCHED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  FAILED
+}
+
+model WholesaleSupplier {
+  id          String           @id @default(cuid())
+  name        String
+  provider    SupplierProvider @default(DEMO_WHOLESALE)
+  apiKey      String?
+  apiSecret   String?
+  endpointUrl String?
+  markupType  MarkupType       @default(PERCENTAGE)
+  markupValue Float            @default(35.0)
+  autoFulfill Boolean          @default(false)
+  isActive    Boolean          @default(true)
+  lastSyncAt  DateTime?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  products    WholesaleProduct[]
+  dispatches  WholesaleOrderDispatch[]
+
+  @@index([provider])
+  @@index([isActive])
+}
+
+model WholesaleProduct {
+  id                   String            @id @default(cuid())
+  supplierId           String
+  supplierSku          String
+  title                String
+  category             String            @default("Electronics")
+  costPrice            Float             // Wholesale price paid to supplier in ₹
+  suggestedRetailPrice Float             // Suggested retail selling price in ₹
+  profitMargin         Float             // Profit per unit in ₹
+  stock                Int               @default(50)
+  images               String            // JSON string array of URLs
+  shortDescription     String?
+  description          String?
+  importedToStore      Boolean           @default(false)
+  hypperstoreProductId String?
+  lastSyncedAt         DateTime          @default(now())
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+
+  supplier WholesaleSupplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+
+  @@unique([supplierId, supplierSku])
+  @@index([supplierId])
+  @@index([category])
+  @@index([importedToStore])
+}
+
+model WholesaleOrderDispatch {
+  id                 String            @id @default(cuid())
+  supplierId         String
+  orderId            String
+  orderNumber        String
+  customerName       String
+  customerPhone      String?
+  shippingAddress    String            // JSON string
+  items              String            // JSON string of item list
+  totalWholesaleCost Float             @default(0)
+  status             DispatchStatus    @default(PENDING)
+  carrier            String?           @default("Delhivery Express")
+  trackingNumber     String?
+  supplierOrderRef   String?
+  errorMessage       String?
+  dispatchedAt       DateTime?
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+
+  supplier WholesaleSupplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+
+  @@index([supplierId])
+  @@index([orderId])
+  @@index([status])
+}
+
